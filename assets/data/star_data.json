@@ -1,1 +1,15 @@
-
+[
+    {
+        "name": "Sirius",
+        "constellation": "Canis Major",
+        "distance": "8.6 light years",
+        "type": "Binary star"
+    },
+    {
+        "name": "Betelgeuse",
+        "constellation": "Orion",
+        "distance": "642 light years",
+        "type": "Red supergiant"
+    }
+    // Add more star data here
+]
