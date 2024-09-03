@@ -7,6 +7,24 @@
     <link rel="stylesheet" href="styles.css">
     <script src="scripts/common.js" defer></script>
     <script src="scripts/star_map.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #starMapCanvas {
+            border: 1px solid #ccc;
+            background: #000;
+        }
+        .info {
+            margin-top: 20px;
+        }
+        .star-info {
+            display: none;
+            position: absolute;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -27,7 +45,10 @@
     </header>
     <main>
         <h2>Explore the Star Map</h2>
-        <canvas id="starMapCanvas" width="800" height="600"></canvas>
+        <div id="starMapContainer">
+            <canvas id="starMapCanvas" width="800" height="600"></canvas>
+            <div id="starInfo" class="star-info"></div>
+        </div>
         <section class="info">
             <h3>About the Star Map</h3>
             <p>View detailed information about stars, constellations, and other celestial objects. Zoom in and explore various regions of the night sky.</p>
@@ -36,5 +57,64 @@
     <footer>
         <p>&copy; 2024 Cosmic Entity. All rights reserved.</p>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('starMapCanvas');
+            const ctx = canvas.getContext('2d');
+            const starInfo = document.getElementById('starInfo');
+            let stars = [];
+
+            // Load and draw stars
+            fetch('assets/data/star_data.json')
+                .then(response => response.json())
+                .then(data => {
+                    stars = data.stars;
+                    drawStars();
+                });
+
+            function drawStars() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'white';
+                stars.forEach(star => {
+                    const x = (star.rightAscension / 24) * canvas.width;
+                    const y = (1 - (star.declination + 90) / 180) * canvas.height;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.font = '12px Arial';
+                    ctx.fillText(star.name, x + 5, y);
+                });
+            }
+
+            // Show star info on hover
+            canvas.addEventListener('mousemove', function(e) {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+
+                let starFound = false;
+                stars.forEach(star => {
+                    const x = (star.rightAscension / 24) * canvas.width;
+                    const y = (1 - (star.declination + 90) / 180) * canvas.height;
+                    if (Math.hypot(mouseX - x, mouseY - y) < 10) {
+                        starInfo.style.display = 'block';
+                        starInfo.style.left = `${e.clientX + 10}px`;
+                        starInfo.style.top = `${e.clientY + 10}px`;
+                        starInfo.innerHTML = `
+                            <strong>${star.name}</strong><br>
+                            RA: ${star.rightAscension}<br>
+                            Dec: ${star.declination}<br>
+                            Mag: ${star.magnitude}<br>
+                            Spectral Type: ${star.spectralType}
+                        `;
+                        starFound = true;
+                    }
+                });
+                if (!starFound) {
+                    starInfo.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
