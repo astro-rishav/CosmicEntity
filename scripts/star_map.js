@@ -2,8 +2,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const canvas = document.getElementById('starMapCanvas');
     const ctx = canvas.getContext('2d');
     const starInfo = document.getElementById('starInfo');
-    const canvasWidth = canvas.width;
-    const canvasHeight = canvas.height;
     let stars = [];
     let scale = 1; // Scale factor for zoom
     let offsetX = 0; // Pan offset X
@@ -11,15 +9,14 @@ document.addEventListener('DOMContentLoaded', function() {
     let isDragging = false;
     let startDragX, startDragY;
 
-    // Load and draw stars
-    fetch('assets/data/star_data.json')
-        .then(response => response.json())
-        .then(data => {
-            stars = data.stars;
-            drawStars();
-        });
+    function resizeCanvas() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+    }
 
     function drawStars() {
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         ctx.fillStyle = '#fff';
 
@@ -34,6 +31,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Load and draw stars
+    fetch('assets/data/star_data.json')
+        .then(response => response.json())
+        .then(data => {
+            stars = data.stars;
+            drawStars();
+        });
+
     // Show star info on hover
     canvas.addEventListener('mousemove', function(e) {
         const rect = canvas.getBoundingClientRect();
@@ -42,8 +47,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let starFound = false;
         stars.forEach(star => {
-            const x = (star.rightAscension / 24) * canvasWidth * scale + offsetX;
-            const y = (1 - (star.declination + 90) / 180) * canvasHeight * scale + offsetY;
+            const x = (star.rightAscension / 24) * canvas.width * scale + offsetX;
+            const y = (1 - (star.declination + 90) / 180) * canvas.height * scale + offsetY;
             if (Math.hypot(mouseX - x, mouseY - y) < 10 * scale) {
                 starInfo.style.display = 'block';
                 starInfo.style.left = `${e.clientX + 10}px`;
@@ -66,11 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Zoom functionality
     canvas.addEventListener('wheel', function(e) {
         e.preventDefault();
-        if (e.deltaY < 0) {
-            scale *= 1.1; // Zoom in
-        } else {
-            scale /= 1.1; // Zoom out
-        }
+        scale = e.deltaY < 0 ? scale * 1.1 : scale / 1.1;
         drawStars();
     });
 
@@ -98,5 +99,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Initial draw
+    resizeCanvas();
     drawStars();
+
+    // Resize event
+    window.addEventListener('resize', resizeCanvas);
 });
