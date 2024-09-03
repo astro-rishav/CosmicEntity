@@ -8,6 +8,8 @@
     <script src="scripts/common.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+    <!-- Include D3.js -->
+    <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
 <body>
     <header>
@@ -84,9 +86,33 @@
             <p>Explore the fundamental concepts of astrophysics and astronomy, including black holes, dark matter, and cosmic radiation.</p>
             <img src="assets/images/stars.jpg" alt="Astrophysics and Astronomy" class="astrophysics-image">
         </section>
+        <!-- Add the SVG container for D3.js -->
+        <section class="star-map">
+            <h3>Star Map</h3>
+            <svg id="star-map" width="800" height="600"></svg>
+        </section>
     </main>
     <footer>
         <p>&copy; 2024 Cosmic Entity. All rights reserved.</p>
     </footer>
+
+    <!-- Custom D3.js Script -->
+    <script>
+        // Your D3.js code to render the star map
+        d3.json('star_data.json').then(function(data) {
+            var svg = d3.select("#star-map");
+            // Example D3.js code to plot stars
+            svg.selectAll("circle")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("cx", function(d) { return d.x; })
+                .attr("cy", function(d) { return d.y; })
+                .attr("r", 5)
+                .style("fill", "yellow");
+        }).catch(function(error) {
+            console.error('Error loading or parsing data:', error);
+        });
+    </script>
 </body>
-</html>
+                </html>
