@@ -16,12 +16,14 @@
             padding: 0;
             background: #000;
             color: #fff;
+            overflow-x: hidden; /* Hide horizontal scroll */
         }
 
         header {
             background: #111;
             padding: 10px;
             text-align: center;
+            border-bottom: 1px solid #444;
         }
 
         .logo-container {
@@ -35,6 +37,7 @@
         nav ul {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         nav ul li {
@@ -53,42 +56,14 @@
 
         main {
             padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .project-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+        .info {
+            margin-top: 20px;
         }
 
-        .project-card {
-            background: #222;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .project-card img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-
-        .controls {
-            margin: 20px 0;
-        }
-
-        .controls label, .controls input, .controls span {
-            margin: 0 5px;
-        }
-
-        footer {
-            background: #111;
-            padding: 10px;
-            text-align: center;
-        }
-
-        /* Star Map Specific Styles */
         #starMapContainer {
             position: relative;
             width: 100%;
@@ -103,10 +78,6 @@
             display: block;
             width: 100%;
             height: 100%;
-        }
-
-        .info {
-            margin-top: 20px;
         }
 
         .star-info {
@@ -155,7 +126,7 @@
     <main>
         <h2>Explore the Star Map</h2>
         <div id="starMapContainer">
-            <canvas id="starMapCanvas" width="800" height="600"></canvas>
+            <canvas id="starMapCanvas"></canvas>
             <div id="starInfo" class="star-info"></div>
         </div>
         <section class="info">
@@ -172,9 +143,11 @@
             const ctx = canvas.getContext('2d');
             const starInfo = document.getElementById('starInfo');
             let stars = [];
-            const canvasWidth = canvas.width;
-            const canvasHeight = canvas.height;
             let scale = 1; // Scale factor for zoom
+
+            // Set canvas dimensions
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
 
             // Load and draw stars
             fetch('assets/data/star_data.json')
@@ -185,6 +158,8 @@
                 });
 
             function drawStars() {
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
                 ctx.clearRect(0, 0, canvasWidth, canvasHeight);
                 ctx.fillStyle = '#fff';
 
@@ -207,8 +182,8 @@
 
                 let starFound = false;
                 stars.forEach(star => {
-                    const x = (star.rightAscension / 24) * canvasWidth;
-                    const y = (1 - (star.declination + 90) / 180) * canvasHeight;
+                    const x = (star.rightAscension / 24) * canvas.width;
+                    const y = (1 - (star.declination + 90) / 180) * canvas.height;
                     if (Math.hypot(mouseX - x, mouseY - y) < 10 * scale) {
                         starInfo.style.display = 'block';
                         starInfo.style.left = `${e.clientX + 10}px`;
@@ -231,11 +206,7 @@
             // Zoom functionality
             canvas.addEventListener('wheel', function(e) {
                 e.preventDefault();
-                if (e.deltaY < 0) {
-                    scale *= 1.1; // Zoom in
-                } else {
-                    scale /= 1.1; // Zoom out
-                }
+                scale = e.deltaY < 0 ? scale * 1.1 : scale / 1.1; // Zoom in or out
                 drawStars();
             });
         });
