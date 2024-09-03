@@ -3,14 +3,16 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: #000;
-    color: #fff;
+    background: radial-gradient(circle, #001d3d 0%, #000000 80%);
+    color: #d3d3d3;
+    overflow: hidden;
 }
 
 header {
-    background: #111;
+    background: rgba(17, 17, 17, 0.8);
     padding: 10px;
     text-align: center;
+    border-bottom: 1px solid #444;
 }
 
 .logo-container {
@@ -24,6 +26,7 @@ header {
 nav ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 nav ul li {
@@ -34,14 +37,19 @@ nav ul li {
 nav ul li a {
     color: #fff;
     text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s;
 }
 
-nav ul li a.active {
+nav ul li a.active, nav ul li a:hover {
+    color: #ffdd57;
     font-weight: bold;
 }
 
 main {
     padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .project-grid {
@@ -55,6 +63,13 @@ main {
     padding: 15px;
     border-radius: 8px;
     text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.project-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
 }
 
 .project-card img {
@@ -65,24 +80,30 @@ main {
 
 .controls {
     margin: 20px 0;
+    text-align: center;
 }
 
 .controls label, .controls input, .controls span {
     margin: 0 5px;
+    color: #fff;
 }
 
 footer {
-    background: #111;
+    background: rgba(17, 17, 17, 0.8);
     padding: 10px;
     text-align: center;
+    border-top: 1px solid #444;
+    font-size: 14px;
 }
 
 /* Star Map Specific Styles */
 #starMapCanvas {
     width: 100%;
-    height: auto; /* Maintain aspect ratio */
-    border: 1px solid #fff; /* Optional: add border for better visibility */
-    background: #000; /* Ensure background is black for better contrast */
+    height: auto;
+    border: 1px solid #fff;
+    background: radial-gradient(circle, #001d3d 0%, #000000 80%);
+    display: block;
+    margin: 0 auto;
 }
 
 .star-map-controls {
@@ -92,19 +113,50 @@ footer {
 
 .star-map-controls label {
     margin-right: 10px;
+    color: #fff;
 }
 
 .star-map-controls input {
     margin-left: 10px;
+    background: #333;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 5px;
 }
 
 /* Extra Content Section Styles */
 .extra-content, .missions, .astrophysics {
     margin-top: 20px;
+    color: #d3d3d3;
 }
 
 .extra-image, .missions-image, .astrophysics-image {
     width: 100%;
     height: auto;
     border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.star-info {
+    display: none;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    transition: opacity 0.3s;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.star-info.visible {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
+    }
