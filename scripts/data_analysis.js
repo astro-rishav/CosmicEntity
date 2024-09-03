@@ -8,25 +8,59 @@ document.addEventListener('DOMContentLoaded', function() {
             dataChart.destroy();
         }
         dataChart = new Chart(ctx, {
-            type: 'line', // You can change the type to 'bar', 'pie', etc.
+            type: 'scatter', // Change to 'line', 'bar', etc. based on your needs
             data: {
-                labels: data.labels,
                 datasets: [{
                     label: 'Astronomical Data',
                     data: data.values,
                     borderColor: 'rgba(75, 192, 192, 1)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderWidth: 1
+                    borderWidth: 1,
+                    pointRadius: 5
                 }]
             },
             options: {
                 responsive: true,
                 scales: {
                     x: {
-                        beginAtZero: true
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Right Ascension (degrees)'
+                        }
                     },
                     y: {
-                        beginAtZero: true
+                        title: {
+                            display: true,
+                            text: 'Declination (degrees)'
+                        }
+                    }
+                },
+                plugins: {
+                    datalabels: {
+                        display: true,
+                        align: 'top',
+                        anchor: 'end',
+                        formatter: function(value) {
+                            return value.label; // Show star names or other identifiers
+                        },
+                        color: '#333',
+                        font: {
+                            weight: 'bold'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                let label = tooltipItem.raw.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += `RA: ${tooltipItem.raw.x}, Dec: ${tooltipItem.raw.y}, Mag: ${tooltipItem.raw.magnitude}`;
+                                return label;
+                            }
+                        }
                     }
                 }
             }
@@ -49,9 +83,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to parse CSV data
     function parseCSV(text) {
-        const lines = text.split('\n');
-        const labels = lines[0].split(',');
-        const values = lines.slice(1).map(line => line.split(',')[1]);
-        return { labels, values };
+        const lines = text.split('\n').filter(line => line.trim() !== '');
+        const headers = lines[0].split(',');
+        const data = lines.slice(1).map(line => {
+            const values = line.split(',');
+            return {
+                x: parseFloat(values[headers.indexOf('Right Ascension (degrees)')]),
+                y: parseFloat(values[headers.indexOf('Declination (degrees)')]),
+                label: values[headers.indexOf('Star Name')],
+                magnitude: values[headers.indexOf('Magnitude')]
+            };
+        });
+        return { values: data };
     }
 });
