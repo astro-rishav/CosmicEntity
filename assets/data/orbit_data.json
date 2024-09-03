@@ -1,1 +1,15 @@
-
+{
+    "planets": [
+        {
+            "name": "Earth",
+            "orbitalPeriod": "365.25 days",
+            "orbitalSpeed": "29.78 km/s"
+        },
+        {
+            "name": "Mars",
+            "orbitalPeriod": "687 days",
+            "orbitalSpeed": "24.07 km/s"
+        }
+        // Add more orbit data here
+    ]
+}
