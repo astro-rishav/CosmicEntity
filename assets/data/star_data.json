@@ -1,15 +1,81 @@
-[
-    {
-        "name": "Sirius",
-        "constellation": "Canis Major",
-        "distance": "8.6 light years",
-        "type": "Binary star"
-    },
-    {
-        "name": "Betelgeuse",
-        "constellation": "Orion",
-        "distance": "642 light years",
-        "type": "Red supergiant"
-    }
-    // Add more star data here
-]
+{
+    "stars": [
+        {
+            "name": "Alpha Centauri",
+            "rightAscension": "14h 39m 36.49s",
+            "declination": "-60° 50' 02.4\"",
+            "magnitude": "-0.01",
+            "spectralType": "G2V"
+        },
+        {
+            "name": "Betelgeuse",
+            "rightAscension": "05h 55m 10.31s",
+            "declination": "+07° 24' 25.4\"",
+            "magnitude": "-5.85",
+            "spectralType": "M2Iab"
+        },
+        {
+            "name": "Sirius",
+            "rightAscension": "06h 45m 08.92s",
+            "declination": "-16° 42' 58.0\"",
+            "magnitude": "-1.46",
+            "spectralType": "A1V"
+        },
+        {
+            "name": "Vega",
+            "rightAscension": "18h 36m 56.34s",
+            "declination": "+38° 47' 01.3\"",
+            "magnitude": "0.03",
+            "spectralType": "A0V"
+        },
+        {
+            "name": "Rigel",
+            "rightAscension": "05h 14m 32.27s",
+            "declination": "-08° 12' 05.9\"",
+            "magnitude": "0.12",
+            "spectralType": "B8Iab"
+        },
+        {
+            "name": "Altair",
+            "rightAscension": "19h 50m 47.0s",
+            "declination": "+08° 52' 06.0\"",
+            "magnitude": "0.77",
+            "spectralType": "A7V"
+        },
+        {
+            "name": "Procyon",
+            "rightAscension": "07h 39m 18.12s",
+            "declination": "+05° 13' 29.5\"",
+            "magnitude": "0.34",
+            "spectralType": "F5IV-V"
+        },
+        {
+            "name": "Arcturus",
+            "rightAscension": "14h 15m 39.67s",
+            "declination": "+19° 10' 57.3\"",
+            "magnitude": "-0.05",
+            "spectralType": "K1.5III"
+        },
+        {
+            "name": "Antares",
+            "rightAscension": "16h 29m 24.4s",
+            "declination": "-26° 25' 55\"",
+            "magnitude": "1.06",
+            "spectralType": "M1.5Iab"
+        },
+        {
+            "name": "Castor",
+            "rightAscension": "07h 34m 36.00s",
+            "declination": "+31° 53' 18.0\"",
+            "magnitude": "1.58",
+            "spectralType": "A1V"
+        },
+        {
+            "name": "Pollux",
+            "rightAscension": "07h 45m 19.36s",
+            "declination": "+28° 01' 34.0\"",
+            "magnitude": "1.14",
+            "spectralType": "K0III"
+        }
+    ]
+}
