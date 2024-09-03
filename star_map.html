@@ -9,20 +9,129 @@
     <script src="scripts/star_map.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        #starMapCanvas {
-            border: 1px solid #ccc;
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+        }
+
+        header {
+            background: #111;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .logo-container {
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 150px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav ul li a.active {
+            font-weight: bold;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .project-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .project-card {
+            background: #222;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .project-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .controls {
+            margin: 20px 0;
+        }
+
+        .controls label, .controls input, .controls span {
+            margin: 0 5px;
+        }
+
+        footer {
+            background: #111;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Star Map Specific Styles */
+        #starMapContainer {
+            position: relative;
+            width: 100%;
+            height: 80vh;
+            overflow: hidden;
             background: #000;
         }
+
+        #starMapCanvas {
+            border: 1px solid #444;
+            background: #000;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
         .info {
             margin-top: 20px;
         }
+
         .star-info {
             display: none;
             position: absolute;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             color: #fff;
             padding: 10px;
             border-radius: 5px;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+            pointer-events: none;
+            font-size: 14px;
+        }
+
+        .star-map-controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .star-map-controls label {
+            margin-right: 10px;
+        }
+
+        .star-map-controls input {
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -63,6 +172,9 @@
             const ctx = canvas.getContext('2d');
             const starInfo = document.getElementById('starInfo');
             let stars = [];
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
+            let scale = 1; // Scale factor for zoom
 
             // Load and draw stars
             fetch('assets/data/star_data.json')
@@ -73,16 +185,17 @@
                 });
 
             function drawStars() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = 'white';
+                ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+                ctx.fillStyle = '#fff';
+
                 stars.forEach(star => {
-                    const x = (star.rightAscension / 24) * canvas.width;
-                    const y = (1 - (star.declination + 90) / 180) * canvas.height;
+                    const x = (star.rightAscension / 24) * canvasWidth;
+                    const y = (1 - (star.declination + 90) / 180) * canvasHeight;
                     ctx.beginPath();
-                    ctx.arc(x, y, 3, 0, Math.PI * 2);
+                    ctx.arc(x, y, 3 * scale, 0, Math.PI * 2);
                     ctx.fill();
-                    ctx.font = '12px Arial';
-                    ctx.fillText(star.name, x + 5, y);
+                    ctx.font = `12px Arial`;
+                    ctx.fillText(star.name, x + 5 * scale, y - 5 * scale);
                 });
             }
 
@@ -94,9 +207,9 @@
 
                 let starFound = false;
                 stars.forEach(star => {
-                    const x = (star.rightAscension / 24) * canvas.width;
-                    const y = (1 - (star.declination + 90) / 180) * canvas.height;
-                    if (Math.hypot(mouseX - x, mouseY - y) < 10) {
+                    const x = (star.rightAscension / 24) * canvasWidth;
+                    const y = (1 - (star.declination + 90) / 180) * canvasHeight;
+                    if (Math.hypot(mouseX - x, mouseY - y) < 10 * scale) {
                         starInfo.style.display = 'block';
                         starInfo.style.left = `${e.clientX + 10}px`;
                         starInfo.style.top = `${e.clientY + 10}px`;
@@ -113,6 +226,17 @@
                 if (!starFound) {
                     starInfo.style.display = 'none';
                 }
+            });
+
+            // Zoom functionality
+            canvas.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                if (e.deltaY < 0) {
+                    scale *= 1.1; // Zoom in
+                } else {
+                    scale /= 1.1; // Zoom out
+                }
+                drawStars();
             });
         });
     </script>
