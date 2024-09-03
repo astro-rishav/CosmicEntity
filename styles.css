@@ -1,3 +1,4 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -74,4 +75,36 @@ footer {
     background: #111;
     padding: 10px;
     text-align: center;
+}
+
+/* Star Map Specific Styles */
+#starMapCanvas {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    border: 1px solid #fff; /* Optional: add border for better visibility */
+    background: #000; /* Ensure background is black for better contrast */
+}
+
+.star-map-controls {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.star-map-controls label {
+    margin-right: 10px;
+}
+
+.star-map-controls input {
+    margin-left: 10px;
+}
+
+/* Extra Content Section Styles */
+.extra-content, .missions, .astrophysics {
+    margin-top: 20px;
+}
+
+.extra-image, .missions-image, .astrophysics-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
 }
