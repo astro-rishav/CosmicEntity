@@ -5,7 +5,7 @@ body {
     padding: 0;
     background: radial-gradient(circle, #001d3d 0%, #000000 80%);
     color: #d3d3d3;
-    overflow: hidden;
+    overflow-x: hidden; /* Only hide horizontal overflow, not vertical */
 }
 
 header {
@@ -159,4 +159,4 @@ footer {
 .star-info.visible {
     display: block;
     animation: fadeIn 0.3s ease-in-out;
-    }
+}
