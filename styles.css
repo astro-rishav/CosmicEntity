@@ -104,12 +104,12 @@ footer {
 }
 
 /* Star Map Specific Styles */
-#starMapCanvas {
+#starMapContainer {
     width: 100%;
     height: 600px; /* Set a fixed height or adjust as needed */
-    border: 1px solid #fff;
+    position: relative;
     background: radial-gradient(circle, #001d3d 0%, #000000 80%);
-    display: block;
+    border: 1px solid #fff; /* Border if needed for SVG container */
     margin: 0 auto;
 }
 
@@ -166,4 +166,4 @@ footer {
 .star-info.visible {
     display: block;
     animation: fadeIn 0.3s ease-in-out;
-}
+    }
