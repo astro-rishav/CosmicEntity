@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Analysis Tool</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="scripts/common.js" defer></script>
     <script src="scripts/data_analysis.js" defer></script>
 </head>
@@ -27,7 +28,13 @@
     </header>
     <main>
         <h2>Astronomical Data Analysis</h2>
-        <div id="dataChart"></div>
+        <div class="upload-section">
+            <input type="file" id="dataUpload" accept=".csv">
+            <button onclick="uploadData()">Upload Data</button>
+        </div>
+        <div id="dataChart">
+            <canvas id="dataChartCanvas"></canvas>
+        </div>
         <section class="info">
             <h3>About This Tool</h3>
             <p>This tool helps you analyze astronomical data sets through visualizations and statistical methods.</p>
