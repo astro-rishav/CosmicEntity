@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <script src="scripts/common.js" defer></script>
     <script src="scripts/star_map.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     <style>
         /* General Styles */
         body {
@@ -72,15 +72,7 @@
             background: #000;
         }
 
-        #starMapCanvas {
-            border: 1px solid #444;
-            background: #000;
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-
-        .star-info {
+        #starInfo {
             display: none;
             position: absolute;
             background: rgba(0, 0, 0, 0.8);
@@ -90,19 +82,6 @@
             box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
             pointer-events: none;
             font-size: 14px;
-        }
-
-        .star-map-controls {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .star-map-controls label {
-            margin-right: 10px;
-        }
-
-        .star-map-controls input {
-            margin-left: 10px;
         }
     </style>
 </head>
@@ -126,8 +105,8 @@
     <main>
         <h2>Explore the Star Map</h2>
         <div id="starMapContainer">
-            <canvas id="starMapCanvas"></canvas>
-            <div id="starInfo" class="star-info"></div>
+            <svg id="starMap"></svg>
+            <div id="starInfo"></div>
         </div>
         <section class="info">
             <h3>About the Star Map</h3>
@@ -139,15 +118,16 @@
     </footer>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const canvas = document.getElementById('starMapCanvas');
-            const ctx = canvas.getContext('2d');
+            const svg = d3.select('#starMap');
             const starInfo = document.getElementById('starInfo');
             let stars = [];
             let scale = 1; // Scale factor for zoom
 
-            // Set canvas dimensions
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
+            // Set SVG dimensions
+            const width = document.getElementById('starMapContainer').clientWidth;
+            const height = document.getElementById('starMapContainer').clientHeight;
+            svg.attr('width', width)
+               .attr('height', height);
 
             // Load and draw stars
             fetch('assets/data/star_data.json')
@@ -158,57 +138,37 @@
                 });
 
             function drawStars() {
-                const canvasWidth = canvas.width;
-                const canvasHeight = canvas.height;
-                ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-                ctx.fillStyle = '#fff';
-
-                stars.forEach(star => {
-                    const x = (star.rightAscension / 24) * canvasWidth;
-                    const y = (1 - (star.declination + 90) / 180) * canvasHeight;
-                    ctx.beginPath();
-                    ctx.arc(x, y, 3 * scale, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.font = `12px Arial`;
-                    ctx.fillText(star.name, x + 5 * scale, y - 5 * scale);
-                });
-            }
-
-            // Show star info on hover
-            canvas.addEventListener('mousemove', function(e) {
-                const rect = canvas.getBoundingClientRect();
-                const mouseX = e.clientX - rect.left;
-                const mouseY = e.clientY - rect.top;
-
-                let starFound = false;
-                stars.forEach(star => {
-                    const x = (star.rightAscension / 24) * canvas.width;
-                    const y = (1 - (star.declination + 90) / 180) * canvas.height;
-                    if (Math.hypot(mouseX - x, mouseY - y) < 10 * scale) {
+                svg.selectAll('*').remove(); // Clear previous content
+                svg.selectAll('circle')
+                    .data(stars)
+                    .enter()
+                    .append('circle')
+                    .attr('cx', d => (d.rightAscension / 24) * width)
+                    .attr('cy', d => (1 - (d.declination + 90) / 180) * height)
+                    .attr('r', 3 * scale)
+                    .attr('fill', '#fff')
+                    .on('mouseover', function(event, d) {
                         starInfo.style.display = 'block';
-                        starInfo.style.left = `${e.clientX + 10}px`;
-                        starInfo.style.top = `${e.clientY + 10}px`;
+                        starInfo.style.left = `${event.pageX + 10}px`;
+                        starInfo.style.top = `${event.pageY + 10}px`;
                         starInfo.innerHTML = `
-                            <strong>${star.name}</strong><br>
-                            RA: ${star.rightAscension}<br>
-                            Dec: ${star.declination}<br>
-                            Mag: ${star.magnitude}<br>
-                            Spectral Type: ${star.spectralType}
+                            <strong>${d.name}</strong><br>
+                            RA: ${d.rightAscension}<br>
+                            Dec: ${d.declination}<br>
+                            Mag: ${d.magnitude}<br>
+                            Spectral Type: ${d.spectralType}
                         `;
-                        starFound = true;
-                    }
-                });
-                if (!starFound) {
-                    starInfo.style.display = 'none';
-                }
-            });
+                    })
+                    .on('mouseout', function() {
+                        starInfo.style.display = 'none';
+                    });
 
-            // Zoom functionality
-            canvas.addEventListener('wheel', function(e) {
-                e.preventDefault();
-                scale = e.deltaY < 0 ? scale * 1.1 : scale / 1.1; // Zoom in or out
-                drawStars();
-            });
+                // Add zoom functionality
+                svg.call(d3.zoom().scaleExtent([1, 10]).on('zoom', (event) => {
+                    svg.selectAll('circle')
+                        .attr('r', 3 * event.transform.k); // Adjust star size based on zoom
+                }));
+            }
         });
     </script>
 </body>
