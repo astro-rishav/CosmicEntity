@@ -1,9 +1,34 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const classificationTool = document.getElementById('classificationTool');
+    const form = document.getElementById('uploadForm');
+    const resultElement = document.getElementById('classification');
 
-    function initializeTool() {
-        // Initialize classification tool
-    }
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
 
-    initializeTool();
+        let formData = new FormData();
+        let imageFile = document.getElementById('imageInput').files[0];
+
+        if (imageFile) {
+            formData.append('image', imageFile);
+
+            fetch('/classify', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    resultElement.textContent = `Error: ${data.error}`;
+                } else {
+                    resultElement.textContent = `The celestial object is classified as: ${data.classification}`;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultElement.textContent = 'An error occurred. Please try again.';
+            });
+        } else {
+            resultElement.textContent = 'Please upload an image.';
+        }
+    });
 });
