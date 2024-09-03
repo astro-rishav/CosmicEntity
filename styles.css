@@ -5,9 +5,10 @@ body {
     padding: 0;
     background: radial-gradient(circle, #001d3d 0%, #000000 80%);
     color: #d3d3d3;
-    overflow-x: hidden; /* Only hide horizontal overflow, not vertical */
+    overflow-y: auto; /* Enable vertical scrolling */
 }
 
+/* Header Styles */
 header {
     background: rgba(17, 17, 17, 0.8);
     padding: 10px;
@@ -15,6 +16,7 @@ header {
     border-bottom: 1px solid #444;
 }
 
+/* Logo Container */
 .logo-container {
     text-align: center;
 }
@@ -23,6 +25,7 @@ header {
     max-width: 150px;
 }
 
+/* Navigation Styles */
 nav ul {
     list-style: none;
     padding: 0;
@@ -46,12 +49,14 @@ nav ul li a.active, nav ul li a:hover {
     font-weight: bold;
 }
 
+/* Main Content Styles */
 main {
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
+/* Project Grid Styles */
 .project-grid {
     display: flex;
     flex-wrap: wrap;
@@ -78,6 +83,7 @@ main {
     border-radius: 8px;
 }
 
+/* Controls Styles */
 .controls {
     margin: 20px 0;
     text-align: center;
@@ -88,6 +94,7 @@ main {
     color: #fff;
 }
 
+/* Footer Styles */
 footer {
     background: rgba(17, 17, 17, 0.8);
     padding: 10px;
@@ -99,7 +106,7 @@ footer {
 /* Star Map Specific Styles */
 #starMapCanvas {
     width: 100%;
-    height: auto;
+    height: 600px; /* Set a fixed height or adjust as needed */
     border: 1px solid #fff;
     background: radial-gradient(circle, #001d3d 0%, #000000 80%);
     display: block;
